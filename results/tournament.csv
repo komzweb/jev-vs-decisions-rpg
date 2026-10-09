@@ -1,0 +1,11 @@
+match_id,left,right,seed,winner,end_reason,turns
+jev_vs_decisions_s00,jev,decisions,0,jev,ko,16
+jev_vs_decisions_s00_swap,decisions,jev,0,decisions,ko,23
+jev_vs_decisions_s01,jev,decisions,1,decisions,ko,20
+jev_vs_decisions_s01_swap,decisions,jev,1,decisions,ko,20
+jev_vs_decisions_s02,jev,decisions,2,decisions,ko,21
+jev_vs_decisions_s02_swap,decisions,jev,2,decisions,ko,25
+jev_vs_decisions_s03,jev,decisions,3,decisions,ko,20
+jev_vs_decisions_s03_swap,decisions,jev,3,decisions,ko,26
+jev_vs_decisions_s04,jev,decisions,4,decisions,ko,26
+jev_vs_decisions_s04_swap,decisions,jev,4,decisions,ko,26
