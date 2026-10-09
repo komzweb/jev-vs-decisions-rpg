@@ -50,3 +50,11 @@ def bootstrap_mean_ci(xs: list[float], n_boot: int = 5000, seed: int = 0) -> tup
     rng = random.Random(seed)
     means = sorted(sum(rng.choice(xs) for _ in xs) / len(xs) for _ in range(n_boot))
     return means[int(0.025 * n_boot)], means[int(0.975 * n_boot) - 1]
+
+
+def auc(pos: list[float], neg: list[float]) -> float:
+    """ROC AUC（Mann-Whitney。同点は0.5）。"""
+    if not pos or not neg:
+        return float("nan")
+    s = sum(1.0 if p > n else 0.5 if p == n else 0.0 for p in pos for n in neg)
+    return s / (len(pos) * len(neg))

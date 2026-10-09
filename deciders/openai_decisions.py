@@ -11,6 +11,7 @@ from deciders.base import Decision, RetryableError, call_with_retry, is_retryabl
 
 MODEL = "gpt-6-luna"
 QUESTION_NAME = "action"
+BINARY_NAME = "flag"
 
 
 class DecisionsDecider:
@@ -24,20 +25,28 @@ class DecisionsDecider:
         )
         self.rng = random.Random(seed)
 
-    def request_body(self, state: str, instructions: str, options: dict[str, str]) -> dict:
-        return {
-            "model": MODEL,
-            "input": state,
-            "questions": [{
-                "type": "choice",
-                "name": QUESTION_NAME,
-                "instructions": instructions,
-                "choices": [{"value": k, "description": v} for k, v in options.items()],
-            }],
-        }
+    def request_body(self, state: str, instructions: str, options: dict[str, str],
+                     binary: str | None = None) -> dict:
+        questions = [{
+            "type": "choice",
+            "name": QUESTION_NAME,
+            "instructions": instructions,
+            "choices": [{"value": k, "description": v} for k, v in options.items()],
+        }]
+        if binary is not None:
+            questions.append({"type": "predicate", "name": BINARY_NAME, "instructions": binary})
+        return {"model": MODEL, "input": state, "questions": questions}
 
     def choose(self, state: str, instructions: str, options: dict[str, str]) -> Decision:
-        body = self.request_body(state, instructions, options)
+        return self.choose_with_binary(state, instructions, options, None)[0]
+
+    def choose_with_binary(self, state: str, instructions: str, options: dict[str, str],
+                           binary: str | None) -> tuple[Decision, float | None]:
+        """Choice に加えて、同じリクエストで二値の質問（predicate）も聞く（おまけ実験A用）。
+
+        二値の質問が refusal の場合は None を返す。
+        """
+        body = self.request_body(state, instructions, options, binary)
 
         def send() -> dict:
             try:
@@ -49,7 +58,11 @@ class DecisionsDecider:
             return json.loads(resp.text)
 
         raw, latency_ms, retries = call_with_retry(send)
-        answer = raw["answers"][0]
+        answers = {a.get("name"): a for a in raw["answers"]}
+        answer = answers[QUESTION_NAME]
+        flag = None
+        if binary is not None and answers[BINARY_NAME]["type"] == "predicate":
+            flag = float(answers[BINARY_NAME]["probability"])
         usage = raw.get("usage") or {}
         if answer["type"] == "refusal":
             return Decision(
@@ -61,7 +74,7 @@ class DecisionsDecider:
                 raw=raw,
                 retries=retries,
                 refused=True,
-            )
+            ), flag
         return Decision(
             choice=answer["choice"],
             probabilities={p["value"]: float(p["probability"]) for p in answer["probabilities"]},
@@ -70,4 +83,4 @@ class DecisionsDecider:
             input_tokens=usage.get("input_tokens"),
             raw=raw,
             retries=retries,
-        )
+        ), flag
