@@ -11,7 +11,7 @@ START_POTIONS = 2
 MAX_TURNS = 30
 
 ATTACK_DAMAGE = (12, 18)
-POWER_DAMAGE = (28, 36)
+POWER_DAMAGE = (40, 48)
 POWER_MP_COST = 10
 DEFEND_REDUCTION = 0.7
 POTION_HEAL = 35
@@ -49,6 +49,17 @@ class Battle:
 
     def __post_init__(self) -> None:
         self.rng = random.Random(self.seed)
+
+    @classmethod
+    def from_state(cls, gs: dict, seed, side: str = "left") -> "Battle":
+        """game_state()形式の局面から開始する（side が「自分」）。次に解決するのは gs["turn"]。"""
+        b = cls(seed=seed, turn=gs["turn"] - 1)
+        b.fighters[side] = Fighter(hp=gs["hp"], mp=gs["mp"], potions=gs["potions"],
+                                   charging=gs["charging"])
+        b.fighters[other(side)] = Fighter(
+            hp=gs["enemy_hp"], mp=gs["enemy_mp"], potions=gs["enemy_potions"],
+            charging=gs["enemy_charging"], last_action=gs["enemy_last_action"])
+        return b
 
     # --- 問い合わせ ---------------------------------------------------------
 

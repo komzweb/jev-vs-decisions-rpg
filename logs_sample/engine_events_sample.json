@@ -86,7 +86,7 @@
         {
           "type": "damage",
           "target": "left",
-          "amount": 34,
+          "amount": 46,
           "source": "power_attack",
           "blocked": false
         },
@@ -98,7 +98,7 @@
       ],
       "after": {
         "left": {
-          "hp": 66,
+          "hp": 54,
           "mp": 30,
           "potions": 2,
           "charging": false,
@@ -139,7 +139,7 @@
       ],
       "after": {
         "left": {
-          "hp": 66,
+          "hp": 54,
           "mp": 30,
           "potions": 2,
           "charging": false,
@@ -164,7 +164,7 @@
         {
           "type": "damage",
           "target": "left",
-          "amount": 10,
+          "amount": 13,
           "source": "power_attack",
           "blocked": true
         },
@@ -176,7 +176,7 @@
       ],
       "after": {
         "left": {
-          "hp": 56,
+          "hp": 41,
           "mp": 30,
           "potions": 2,
           "charging": false,
@@ -214,7 +214,7 @@
       ],
       "after": {
         "left": {
-          "hp": 56,
+          "hp": 41,
           "mp": 30,
           "potions": 2,
           "charging": false,
@@ -258,7 +258,7 @@
       ],
       "after": {
         "left": {
-          "hp": 38,
+          "hp": 23,
           "mp": 30,
           "potions": 2,
           "charging": false,
@@ -302,7 +302,7 @@
       ],
       "after": {
         "left": {
-          "hp": 38,
+          "hp": 23,
           "mp": 22,
           "potions": 2,
           "charging": true,
@@ -331,7 +331,7 @@
         {
           "type": "damage",
           "target": "right",
-          "amount": 35,
+          "amount": 47,
           "source": "power_attack",
           "blocked": false
         },
@@ -348,14 +348,14 @@
       ],
       "after": {
         "left": {
-          "hp": 38,
+          "hp": 23,
           "mp": 24,
           "potions": 2,
           "charging": false,
           "last_action": "power_release"
         },
         "right": {
-          "hp": 52,
+          "hp": 40,
           "mp": 26,
           "potions": 0,
           "charging": false,
@@ -387,14 +387,14 @@
       ],
       "after": {
         "left": {
-          "hp": 38,
+          "hp": 23,
           "mp": 26,
           "potions": 2,
           "charging": false,
           "last_action": "defend"
         },
         "right": {
-          "hp": 52,
+          "hp": 40,
           "mp": 18,
           "potions": 0,
           "charging": true,
@@ -417,7 +417,7 @@
         {
           "type": "damage",
           "target": "left",
-          "amount": 33,
+          "amount": 45,
           "source": "power_attack",
           "blocked": false
         },
@@ -434,14 +434,14 @@
       ],
       "after": {
         "left": {
-          "hp": 40,
+          "hp": 13,
           "mp": 28,
           "potions": 1,
           "charging": false,
           "last_action": "potion"
         },
         "right": {
-          "hp": 52,
+          "hp": 40,
           "mp": 20,
           "potions": 0,
           "charging": false,
@@ -469,14 +469,14 @@
       ],
       "after": {
         "left": {
-          "hp": 40,
+          "hp": 13,
           "mp": 30,
           "potions": 1,
           "charging": false,
           "last_action": "defend"
         },
         "right": {
-          "hp": 52,
+          "hp": 40,
           "mp": 22,
           "potions": 0,
           "charging": false,
@@ -506,104 +506,24 @@
           "blocked": false
         },
         {
-          "type": "mp_regen",
-          "target": "right",
-          "amount": 2
+          "type": "ko",
+          "target": "left"
         }
       ],
       "after": {
         "left": {
-          "hp": 27,
+          "hp": 0,
           "mp": 30,
           "potions": 1,
           "charging": false,
           "last_action": "attack"
         },
         "right": {
-          "hp": 36,
-          "mp": 24,
+          "hp": 24,
+          "mp": 22,
           "potions": 0,
           "charging": false,
           "last_action": "attack"
-        }
-      }
-    },
-    {
-      "turn": 14,
-      "actions": {
-        "left": "power_attack",
-        "right": "defend"
-      },
-      "events": [
-        {
-          "type": "charge_start",
-          "target": "left"
-        },
-        {
-          "type": "mp_regen",
-          "target": "left",
-          "amount": 2
-        },
-        {
-          "type": "mp_regen",
-          "target": "right",
-          "amount": 2
-        }
-      ],
-      "after": {
-        "left": {
-          "hp": 27,
-          "mp": 22,
-          "potions": 1,
-          "charging": true,
-          "last_action": "power_attack"
-        },
-        "right": {
-          "hp": 36,
-          "mp": 26,
-          "potions": 0,
-          "charging": false,
-          "last_action": "defend"
-        }
-      }
-    },
-    {
-      "turn": 15,
-      "actions": {
-        "left": null,
-        "right": "power_attack"
-      },
-      "events": [
-        {
-          "type": "charge_start",
-          "target": "right"
-        },
-        {
-          "type": "damage",
-          "target": "right",
-          "amount": 36,
-          "source": "power_attack",
-          "blocked": false
-        },
-        {
-          "type": "ko",
-          "target": "right"
-        }
-      ],
-      "after": {
-        "left": {
-          "hp": 27,
-          "mp": 22,
-          "potions": 1,
-          "charging": false,
-          "last_action": "power_release"
-        },
-        "right": {
-          "hp": 0,
-          "mp": 16,
-          "potions": 0,
-          "charging": true,
-          "last_action": "power_attack"
         }
       }
     }

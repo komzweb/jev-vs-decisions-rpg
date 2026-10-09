@@ -40,7 +40,7 @@ Oct 8, 2026 · @Koji Mochizuki
 | 行動ID | 名前 | 効果 |
 | --- | --- | --- |
 | `attack` | 攻撃 | 12〜18ダメージ |
-| `power_attack` | 強攻撃 | MP10消費。次のターンに溜めて、その次に28〜36ダメージ。溜め中に被弾すると中断はしない |
+| `power_attack` | 強攻撃 | MP10消費。選んだターンは溜め、次のターンに40〜48ダメージ。溜め中に被弾しても中断はしない |
 | `defend` | 防御 | そのターンの被ダメージを70%軽減 |
 | `potion` | 回復薬 | HPを35回復（最大値まで）。残数0なら選べない |
 | `flee` | 逃げる | 成功率30%。成功で試合終了（逃げた側の負け扱い、ただし「生存」として別集計） |
@@ -48,9 +48,13 @@ Oct 8, 2026 · @Koji Mochizuki
 **進行**
 
 1. 両者が同時に行動を選ぶ（相手の今ターンの選択は見えない）。
-2. 防御 → 回復 → 攻撃の順に解決する。
-3. 各ターン、MPが2回復する。
-4. HPが0以下になった側の負け。同時なら引き分け。
+2. 溜め開始 → 防御 → 回復 → 逃走 → 攻撃 → KO判定 → MP回復 の順に解決する。
+3. 逃走に成功した場合、そのターンの攻撃は発生しない。両者が同時に逃走に成功したら引き分け。
+4. 防御時の被ダメージは `round(ダメージ × 0.3)`。
+5. KOが出なかったターンの最後に、MPが2回復する（最大30）。
+6. HPが0以下になった側の負け。同時なら引き分け。
+
+**強攻撃の流れ**：強攻撃を選んだターンは溜め（MP10消費）。次のターンは行動を選べず、強攻撃が自動で発動する（このターンはAPIを呼ばない）。
 
 **乱数**：試合ごとにシードを固定し（`seed = 試合番号`）、同じシードで左右（どちらのAPIがどちら側か）を入れ替えた2試合を1セットにする。
 
@@ -67,8 +71,8 @@ APIには数値をそのまま渡さず、コードで言葉のバケツに変�
 | HP割合 | 80%以上 `healthy` / 50〜79% `wounded` / 20〜49% `badly hurt` / 20%未満 `near death` |
 | MP | 10以上 `enough MP for a power attack` / 10未満 `not enough MP for a power attack` |
 | 回復薬 | `2 potions left` / `1 potion left` / `no potions left` |
-| 相手の状態 | 上記と同じバケツ ＋ `charging a power attack`（溜め中のみ） |
-| 直前の相手の行動 | `last turn the enemy attacked / defended / used a potion / started charging` |
+| 相手の状態 | HP・MP・回復薬の数を上記と同じバケツで ＋ `charging a power attack (it will hit hard next turn)`（溜め中のみ） |
+| 直前の相手の行動 | `Last turn the enemy attacked / defended / used a potion / started charging / unleashed its power attack / tried to run away but failed.` |
 | ターン | 25以上 `the battle is about to time out` を追加 |
 
 `state` の例（英語）：
@@ -76,7 +80,7 @@ APIには数値をそのまま渡さず、コードで言葉のバケツに変�
 ```markdown
 You are a knight in a one-on-one turn-based battle. Your goal is to win.
 You: badly hurt, enough MP for a power attack, 1 potion left.
-Enemy: wounded, charging a power attack (it will hit hard next turn).
+Enemy: wounded, not enough MP for a power attack, 1 potion left, charging a power attack (it will hit hard next turn).
 Last turn the enemy started charging.
 ```
 
@@ -97,6 +101,8 @@ class Decision:
     latency_ms: float               # 送信から受信までの実測
     input_tokens: int | None        # レスポンスのusageから取得
     raw: dict                       # 生レスポンス（ログ用）
+    retries: int = 0                # リトライ回数
+    refused: bool = False           # refusal をランダム行動で代替した場合 True
 
 class Decider(Protocol):
     name: str
@@ -164,7 +170,7 @@ class Decider(Protocol):
 **正解の計算（`game/simulate.py`）**
 
 1. ある局面で、選べる行動それぞれについて「1手目にその行動を取り、2手目以降は自動で戦う」対戦を1,000回ずつシミュレーションし、行動ごとの勝率を出す。
-2. 2手目以降の動き方（自分・相手とも）は、RandomとRuleの2通りで別々に計算する。
+2. 2手目以降の動き方（自分・相手とも同じ方針）は、Random（逃走を選ばない）とRuleの2通りで別々に計算する。1手目の相手の行動もその方針で決める。逃走なしRandomはシミュレーション専用で、検証2の対戦相手のRandomは逃走も選ぶ。
 3. 次の両方を満たす局面だけを「正解あり」とする。
    - 2通りの計算のどちらでも、同じ行動が勝率1位になる
    - どちらの計算でも、1位と2位の勝率差が20ポイント以上ある

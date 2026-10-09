@@ -11,11 +11,15 @@ from game.engine import Battle, other
 class RandomNPC:
     name = "random"
 
-    def __init__(self, seed: int | str | None = None):
+    def __init__(self, seed: int | str | None = None, allow_flee: bool = True):
         self.rng = random.Random(seed)
+        self.allow_flee = allow_flee  # False は検証1のシミュレーション専用
 
     def act(self, battle: Battle, side: str) -> str:
-        return self.rng.choice(battle.available_actions(side))
+        acts = battle.available_actions(side)
+        if not self.allow_flee:
+            acts = [a for a in acts if a != "flee"]
+        return self.rng.choice(acts)
 
 
 class RuleNPC:
