@@ -35,3 +35,18 @@ class RuleNPC:
         if "power_attack" in avail and hp_bucket(en.hp) == "healthy":
             return "power_attack"
         return "attack"
+
+
+class EpsilonRuleNPC(RuleNPC):
+    """確率εで逃走以外の選べる行動から一様ランダム、残りは Rule NPC と同じ行動（検証1のシミュレーション専用）。"""
+
+    name = "eps_rule"
+
+    def __init__(self, eps: float, seed: int | str | None = None):
+        self.eps = eps
+        self.rng = random.Random(seed)
+
+    def act(self, battle: Battle, side: str) -> str:
+        if self.rng.random() < self.eps:
+            return self.rng.choice([a for a in battle.available_actions(side) if a != "flee"])
+        return super().act(battle, side)

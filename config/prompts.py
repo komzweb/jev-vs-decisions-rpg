@@ -1,4 +1,4 @@
-"""質問文・選択肢の説明・状態文の言語化ルール（閾値）をまとめた唯一の定義ファイル。
+"""質問文・選択肢の説明・状態文の言語化ルール（閾値）・検証の採用基準をまとめた唯一の定義ファイル。
 
 両APIで1文字も変えずに共通利用する（SPEC.md「API呼び出し仕様」「状態の言語化ルール」）。
 """
@@ -50,3 +50,19 @@ LAST_ENEMY_ACTION = {
 
 TIMEOUT_WARNING_TURN = 25
 TIMEOUT_WARNING = "The battle is about to time out."
+
+
+# --- 検証1 正解計算の設定・採用基準（SPEC.md「検証1」） ------------------------
+
+POS_N_CANDIDATES = 3000
+POS_TRIALS = 1000
+POS_GEN_SEED = 20261009
+POS_SELECT_SEED = 1
+POS_EPSILON = 0.3                    # 本採用の ε-Rule の ε
+POS_ROBUSTNESS_EPSILONS = (0.2, 0.5)  # 頑健性確認用（採用には使わない）
+POS_CLEAR_GAP = 0.15        # 正解あり：2方針で1位が同じ、かつ両方針で1位-2位の差がこれ以上
+POS_TIE_GAP = 0.05          # 拮抗：両方針で1位-2位の差がこれ未満
+POS_TIE_TOP_RANGE = (0.2, 0.8)  # 拮抗：両方針で1位の勝率がこの範囲（両端含む）
+POS_N_CLEAR = 100
+POS_N_TIE = 30
+POS_MAX_SAME_ANSWER = 40    # 抽出する正解あり局面で、同じ正解行動の上限

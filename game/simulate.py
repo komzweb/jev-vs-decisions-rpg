@@ -1,8 +1,9 @@
 """局面ごとの行動別勝率をシミュレーションで計算する（SPEC.md「検証1」の正解）。
 
 1手目に自分が指定の行動を取り、相手の1手目と2手目以降（自分・相手とも）は方針（policy）で動かす。
-- "random": 逃走を選ばない Random（シミュレーション専用）
-- "rule":   Rule NPC
+- "random":       逃走を選ばない Random（シミュレーション専用）
+- "eps_rule:<ε>":  確率εで逃走以外から一様ランダム、残りは Rule と同じ行動（シミュレーション専用）
+- "rule":         Rule NPC（決定的なため検証1の採用には使わない）
 各試行のシードは (局面ID, 試行番号) から決まる。同じ試行番号は行動間で同じ乱数列を使う。
 """
 
@@ -11,9 +12,8 @@ from __future__ import annotations
 import random
 
 from game.engine import Battle, other
-from game.npcs import RandomNPC, RuleNPC
+from game.npcs import EpsilonRuleNPC, RandomNPC, RuleNPC
 
-POLICIES = ("random", "rule")
 ME = "left"
 ENEMY = other(ME)
 
@@ -23,6 +23,8 @@ def make_policy(policy: str, seed: str):
         return RandomNPC(seed, allow_flee=False)
     if policy == "rule":
         return RuleNPC()
+    if policy.startswith("eps_rule:"):
+        return EpsilonRuleNPC(float(policy.split(":", 1)[1]), seed)
     raise ValueError(policy)
 
 
