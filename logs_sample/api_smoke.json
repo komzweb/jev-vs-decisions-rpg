@@ -1,0 +1,515 @@
+{
+  "game_state": {
+    "turn": 6,
+    "hp": 30,
+    "mp": 12,
+    "potions": 1,
+    "charging": false,
+    "enemy_hp": 60,
+    "enemy_mp": 4,
+    "enemy_potions": 1,
+    "enemy_charging": true,
+    "enemy_last_action": "power_attack"
+  },
+  "state_text": "You are a knight in a one-on-one turn-based battle. Your goal is to win.\nYou: badly hurt, enough MP for a power attack, 1 potion left.\nEnemy: wounded, not enough MP for a power attack, 1 potion left, charging a power attack (it will hit hard next turn).\nLast turn the enemy started charging.",
+  "calls": [
+    {
+      "api": "jev",
+      "model": "jev-1.13.0",
+      "option_order": [
+        "defend",
+        "power_attack",
+        "attack",
+        "flee",
+        "potion"
+      ],
+      "request": {
+        "model": "jev-1.13.0",
+        "state": "You are a knight in a one-on-one turn-based battle. Your goal is to win.\nYou: badly hurt, enough MP for a power attack, 1 potion left.\nEnemy: wounded, not enough MP for a power attack, 1 potion left, charging a power attack (it will hit hard next turn).\nLast turn the enemy started charging.",
+        "questions": {
+          "action": {
+            "type": "choice",
+            "instructions": "Which action should you take this turn to maximize your chance of winning?",
+            "criteria": {
+              "defend": "Block. Takes 70% less damage this turn.",
+              "power_attack": "Spend 10 MP to charge this turn and deal heavy damage next turn. The enemy can see you charging.",
+              "attack": "A normal attack dealing moderate damage.",
+              "flee": "Try to run away. Succeeds only sometimes, and fleeing counts as not winning.",
+              "potion": "Drink a potion to restore a large amount of HP."
+            }
+          }
+        }
+      },
+      "timestamp": "2026-10-09T10:56:58+09:00",
+      "choice": "power_attack",
+      "probabilities": {
+        "defend": 0.34,
+        "power_attack": 0.45,
+        "attack": 0.11,
+        "flee": 0.0,
+        "potion": 0.1
+      },
+      "confidence": 0.31,
+      "latency_ms": 246.22266700316686,
+      "input_tokens": 493,
+      "retries": 0,
+      "refused": false,
+      "raw": {
+        "model": "jev-1.13.0",
+        "answers": {
+          "action": {
+            "type": "choice",
+            "choice": "power_attack",
+            "confidence": 0.31,
+            "probabilities": {
+              "defend": 0.34,
+              "power_attack": 0.45,
+              "attack": 0.11,
+              "flee": 0.0,
+              "potion": 0.1
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 493,
+          "output_tokens": 57
+        }
+      }
+    },
+    {
+      "api": "decisions",
+      "model": "gpt-6-luna",
+      "option_order": [
+        "defend",
+        "power_attack",
+        "attack",
+        "flee",
+        "potion"
+      ],
+      "request": {
+        "model": "gpt-6-luna",
+        "input": "You are a knight in a one-on-one turn-based battle. Your goal is to win.\nYou: badly hurt, enough MP for a power attack, 1 potion left.\nEnemy: wounded, not enough MP for a power attack, 1 potion left, charging a power attack (it will hit hard next turn).\nLast turn the enemy started charging.",
+        "questions": [
+          {
+            "type": "choice",
+            "name": "action",
+            "instructions": "Which action should you take this turn to maximize your chance of winning?",
+            "choices": [
+              {
+                "value": "defend",
+                "description": "Block. Takes 70% less damage this turn."
+              },
+              {
+                "value": "power_attack",
+                "description": "Spend 10 MP to charge this turn and deal heavy damage next turn. The enemy can see you charging."
+              },
+              {
+                "value": "attack",
+                "description": "A normal attack dealing moderate damage."
+              },
+              {
+                "value": "flee",
+                "description": "Try to run away. Succeeds only sometimes, and fleeing counts as not winning."
+              },
+              {
+                "value": "potion",
+                "description": "Drink a potion to restore a large amount of HP."
+              }
+            ]
+          }
+        ]
+      },
+      "timestamp": "2026-10-09T10:57:02+09:00",
+      "choice": "defend",
+      "probabilities": {
+        "defend": 0.41,
+        "power_attack": 0.02,
+        "attack": 0.22,
+        "flee": 0.02,
+        "potion": 0.33
+      },
+      "confidence": 0.26,
+      "latency_ms": 3589.667667009053,
+      "input_tokens": 269,
+      "retries": 0,
+      "refused": false,
+      "raw": {
+        "model": "gpt-6-luna",
+        "answers": [
+          {
+            "type": "choice",
+            "name": "action",
+            "choice": "defend",
+            "probabilities": [
+              {
+                "value": "defend",
+                "probability": 0.41
+              },
+              {
+                "value": "power_attack",
+                "probability": 0.02
+              },
+              {
+                "value": "attack",
+                "probability": 0.22
+              },
+              {
+                "value": "flee",
+                "probability": 0.02
+              },
+              {
+                "value": "potion",
+                "probability": 0.33
+              }
+            ],
+            "confidence": 0.26
+          }
+        ],
+        "usage": {
+          "input_tokens": 269,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0
+          },
+          "output_tokens": 0,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 269
+        }
+      }
+    },
+    {
+      "api": "jev",
+      "model": "jev-1.13.0",
+      "option_order": [
+        "attack",
+        "defend",
+        "power_attack",
+        "potion",
+        "flee"
+      ],
+      "request": {
+        "model": "jev-1.13.0",
+        "state": "You are a knight in a one-on-one turn-based battle. Your goal is to win.\nYou: badly hurt, enough MP for a power attack, 1 potion left.\nEnemy: wounded, not enough MP for a power attack, 1 potion left, charging a power attack (it will hit hard next turn).\nLast turn the enemy started charging.",
+        "questions": {
+          "action": {
+            "type": "choice",
+            "instructions": "Which action should you take this turn to maximize your chance of winning?",
+            "criteria": {
+              "attack": "A normal attack dealing moderate damage.",
+              "defend": "Block. Takes 70% less damage this turn.",
+              "power_attack": "Spend 10 MP to charge this turn and deal heavy damage next turn. The enemy can see you charging.",
+              "potion": "Drink a potion to restore a large amount of HP.",
+              "flee": "Try to run away. Succeeds only sometimes, and fleeing counts as not winning."
+            }
+          }
+        }
+      },
+      "timestamp": "2026-10-09T10:57:02+09:00",
+      "choice": "defend",
+      "probabilities": {
+        "attack": 0.19,
+        "defend": 0.44,
+        "power_attack": 0.25,
+        "potion": 0.11,
+        "flee": 0.01
+      },
+      "confidence": 0.3,
+      "latency_ms": 181.49504100438207,
+      "input_tokens": 493,
+      "retries": 0,
+      "refused": false,
+      "raw": {
+        "model": "jev-1.13.0",
+        "answers": {
+          "action": {
+            "type": "choice",
+            "choice": "defend",
+            "confidence": 0.3,
+            "probabilities": {
+              "attack": 0.19,
+              "defend": 0.44,
+              "power_attack": 0.25,
+              "potion": 0.11,
+              "flee": 0.01
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 493,
+          "output_tokens": 57
+        }
+      }
+    },
+    {
+      "api": "decisions",
+      "model": "gpt-6-luna",
+      "option_order": [
+        "attack",
+        "defend",
+        "power_attack",
+        "potion",
+        "flee"
+      ],
+      "request": {
+        "model": "gpt-6-luna",
+        "input": "You are a knight in a one-on-one turn-based battle. Your goal is to win.\nYou: badly hurt, enough MP for a power attack, 1 potion left.\nEnemy: wounded, not enough MP for a power attack, 1 potion left, charging a power attack (it will hit hard next turn).\nLast turn the enemy started charging.",
+        "questions": [
+          {
+            "type": "choice",
+            "name": "action",
+            "instructions": "Which action should you take this turn to maximize your chance of winning?",
+            "choices": [
+              {
+                "value": "attack",
+                "description": "A normal attack dealing moderate damage."
+              },
+              {
+                "value": "defend",
+                "description": "Block. Takes 70% less damage this turn."
+              },
+              {
+                "value": "power_attack",
+                "description": "Spend 10 MP to charge this turn and deal heavy damage next turn. The enemy can see you charging."
+              },
+              {
+                "value": "potion",
+                "description": "Drink a potion to restore a large amount of HP."
+              },
+              {
+                "value": "flee",
+                "description": "Try to run away. Succeeds only sometimes, and fleeing counts as not winning."
+              }
+            ]
+          }
+        ]
+      },
+      "timestamp": "2026-10-09T10:57:02+09:00",
+      "choice": "potion",
+      "probabilities": {
+        "attack": 0.02,
+        "defend": 0.27,
+        "power_attack": 0.02,
+        "potion": 0.69,
+        "flee": 0.0
+      },
+      "confidence": 0.61,
+      "latency_ms": 446.1277499940479,
+      "input_tokens": 269,
+      "retries": 0,
+      "refused": false,
+      "raw": {
+        "model": "gpt-6-luna",
+        "answers": [
+          {
+            "type": "choice",
+            "name": "action",
+            "choice": "potion",
+            "probabilities": [
+              {
+                "value": "attack",
+                "probability": 0.02
+              },
+              {
+                "value": "defend",
+                "probability": 0.27
+              },
+              {
+                "value": "power_attack",
+                "probability": 0.02
+              },
+              {
+                "value": "potion",
+                "probability": 0.69
+              },
+              {
+                "value": "flee",
+                "probability": 0.0
+              }
+            ],
+            "confidence": 0.61
+          }
+        ],
+        "usage": {
+          "input_tokens": 269,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0
+          },
+          "output_tokens": 0,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 269
+        }
+      }
+    },
+    {
+      "api": "jev",
+      "model": "jev-1.13.0",
+      "option_order": [
+        "power_attack",
+        "attack",
+        "flee",
+        "defend",
+        "potion"
+      ],
+      "request": {
+        "model": "jev-1.13.0",
+        "state": "You are a knight in a one-on-one turn-based battle. Your goal is to win.\nYou: badly hurt, enough MP for a power attack, 1 potion left.\nEnemy: wounded, not enough MP for a power attack, 1 potion left, charging a power attack (it will hit hard next turn).\nLast turn the enemy started charging.",
+        "questions": {
+          "action": {
+            "type": "choice",
+            "instructions": "Which action should you take this turn to maximize your chance of winning?",
+            "criteria": {
+              "power_attack": "Spend 10 MP to charge this turn and deal heavy damage next turn. The enemy can see you charging.",
+              "attack": "A normal attack dealing moderate damage.",
+              "flee": "Try to run away. Succeeds only sometimes, and fleeing counts as not winning.",
+              "defend": "Block. Takes 70% less damage this turn.",
+              "potion": "Drink a potion to restore a large amount of HP."
+            }
+          }
+        }
+      },
+      "timestamp": "2026-10-09T10:57:03+09:00",
+      "choice": "defend",
+      "probabilities": {
+        "power_attack": 0.39,
+        "attack": 0.14,
+        "flee": 0.0,
+        "defend": 0.42,
+        "potion": 0.05
+      },
+      "confidence": 0.27,
+      "latency_ms": 157.76916699542198,
+      "input_tokens": 493,
+      "retries": 0,
+      "refused": false,
+      "raw": {
+        "model": "jev-1.13.0",
+        "answers": {
+          "action": {
+            "type": "choice",
+            "choice": "defend",
+            "confidence": 0.27,
+            "probabilities": {
+              "power_attack": 0.39,
+              "attack": 0.14,
+              "flee": 0.0,
+              "defend": 0.42,
+              "potion": 0.05
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 493,
+          "output_tokens": 57
+        }
+      }
+    },
+    {
+      "api": "decisions",
+      "model": "gpt-6-luna",
+      "option_order": [
+        "power_attack",
+        "attack",
+        "flee",
+        "defend",
+        "potion"
+      ],
+      "request": {
+        "model": "gpt-6-luna",
+        "input": "You are a knight in a one-on-one turn-based battle. Your goal is to win.\nYou: badly hurt, enough MP for a power attack, 1 potion left.\nEnemy: wounded, not enough MP for a power attack, 1 potion left, charging a power attack (it will hit hard next turn).\nLast turn the enemy started charging.",
+        "questions": [
+          {
+            "type": "choice",
+            "name": "action",
+            "instructions": "Which action should you take this turn to maximize your chance of winning?",
+            "choices": [
+              {
+                "value": "power_attack",
+                "description": "Spend 10 MP to charge this turn and deal heavy damage next turn. The enemy can see you charging."
+              },
+              {
+                "value": "attack",
+                "description": "A normal attack dealing moderate damage."
+              },
+              {
+                "value": "flee",
+                "description": "Try to run away. Succeeds only sometimes, and fleeing counts as not winning."
+              },
+              {
+                "value": "defend",
+                "description": "Block. Takes 70% less damage this turn."
+              },
+              {
+                "value": "potion",
+                "description": "Drink a potion to restore a large amount of HP."
+              }
+            ]
+          }
+        ]
+      },
+      "timestamp": "2026-10-09T10:57:03+09:00",
+      "choice": "potion",
+      "probabilities": {
+        "power_attack": 0.01,
+        "attack": 0.04,
+        "flee": 0.0,
+        "defend": 0.04,
+        "potion": 0.91
+      },
+      "confidence": 0.89,
+      "latency_ms": 415.9609170019394,
+      "input_tokens": 269,
+      "retries": 0,
+      "refused": false,
+      "raw": {
+        "model": "gpt-6-luna",
+        "answers": [
+          {
+            "type": "choice",
+            "name": "action",
+            "choice": "potion",
+            "probabilities": [
+              {
+                "value": "power_attack",
+                "probability": 0.01
+              },
+              {
+                "value": "attack",
+                "probability": 0.04
+              },
+              {
+                "value": "flee",
+                "probability": 0.0
+              },
+              {
+                "value": "defend",
+                "probability": 0.04
+              },
+              {
+                "value": "potion",
+                "probability": 0.91
+              }
+            ],
+            "confidence": 0.89
+          }
+        ],
+        "usage": {
+          "input_tokens": 269,
+          "input_tokens_details": {
+            "cached_tokens": 0,
+            "cache_write_tokens": 0
+          },
+          "output_tokens": 0,
+          "output_tokens_details": {
+            "reasoning_tokens": 0
+          },
+          "total_tokens": 269
+        }
+      }
+    }
+  ]
+}
